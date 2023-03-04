@@ -148,7 +148,7 @@ class CharMenu extends MusicBeatState{
 
         // The currently selected character's name top right
         selectedCharName = new FlxText(FlxG.width * 0.7, 10, 0, "", 32);
-        selectedCharName.setFormat(fontFolder + 'vcr.ttf', 32, FlxColor.WHITE, RIGHT);
+        selectedCharName.setFormat(fontFolder + 'normal.ttf', 32, FlxColor.WHITE, RIGHT);
         selectedCharName.alpha = 0.7;
         add(selectedCharName);
 

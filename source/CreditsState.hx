@@ -34,6 +34,7 @@ class CreditsState extends MusicBeatState
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 	var descBox:AttachedSprite;
+	var topBox:AttachedSprite;
 
 	var offsetThing:Float = -75;
 
@@ -146,6 +147,14 @@ class CreditsState extends MusicBeatState
 			else optionText.alignment = CENTERED;
 		}
 		
+		topBox = new AttachedSprite();
+		topBox.makeGraphic(1, 1, FlxColor.BLACK);
+		topBox.xAdd = -10;
+		topBox.yAdd = 110;
+		topBox.alphaMult = 0.6;
+		topBox.alpha = 0.6;
+		add(topBox);
+
 		descBox = new AttachedSprite();
 		descBox.makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.xAdd = -10;
