@@ -13,6 +13,7 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import haxe.Json;
+import haxe.EnumTools;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 #if MODS_ALLOWED
@@ -32,11 +33,18 @@ import flixel.system.FlxSound;
 import flixel.system.ui.FlxSoundTray;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
+import flixel.tweens.FlxEase.EaseFunction;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxTween.TweenOptions;
+import motion.Actuate;
+import motion.easing.Cubic;
 import flixel.util.FlxColor;
+import flixel.util.FlxAxes;
 import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
+import flixel.addons.effects.FlxTrail;
+import flixel.tweens.misc.NumTween;
 
 using StringTools;
 typedef TitleData =
@@ -113,6 +121,11 @@ class TitleState extends MusicBeatState
 			}
 		}
 		#end*/
+
+		#if desktop
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("Title Screen", null);
+		#end
 
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.sound.muteKeys = muteKeys;
@@ -382,8 +395,8 @@ class TitleState extends MusicBeatState
 		logo.antialiasing = ClientPrefs.globalAntialiasing;
 		// add(logo);
 
-		 FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
-		 FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
+		FlxTween.tween(logoBl, {y: logoBl.y + 30}, 1.2, {ease: FlxEase.circInOut, type: PINGPONG});
+		FlxTween.tween(logoBl, {angle: logoBl.angle	+ 5}, 1, {ease: FlxEase.circInOut, type: PINGPONG});
 
 		credGroup = new FlxGroup();
 		add(credGroup);
@@ -407,7 +420,7 @@ class TitleState extends MusicBeatState
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = ClientPrefs.globalAntialiasing;
 
-		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
+		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.cubeInOut, type: PINGPONG});
 
 		if (initialized)
 			skipIntro();

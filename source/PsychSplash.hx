@@ -1,0 +1,185 @@
+import Discord;
+import Discord.DiscordClient;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.FlxState;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import flixel.text.FlxText;
+import openfl.utils.Assets as OpenFlAssets;
+#if VIDEOS_ALLOWED
+import hxcodec.VideoHandler;
+#end
+
+#if sys
+import sys.FileSystem;
+import sys.io.File;
+#end
+
+using StringTools;
+
+class PsychSplash extends FlxState
+{
+
+    var splash:FlxSprite;
+    var splashT:FlxSprite;
+    var thestate:FlxState = new TitleState();
+    var randomSplash:FlxText;
+    var skipSplash:FlxText;
+    var textNeeded:String = '';
+
+    // I LOVE RANDOM FUCKING VIDEOS!!!!
+    var unfunnyVideos:Array<String> = ['nuhuh','mrbreast','sex','damnbro','fooled'];
+
+    // i love psych engine community server
+    var psychServerText:Array<String> = [
+    "Welcome Back!"];
+
+    var forkLiftText:Array<String> = [
+    "Welcome Back!"
+                                ];
+
+ 
+	override function create()
+	{
+
+        #if desktop
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("Splash Screen", null);
+		#end
+
+        skipSplash = new FlxText(0, 0, 1250, '[PRESS SPACE TO SKIP]' , 0);
+        skipSplash.autoSize = false;
+        skipSplash.setFormat("VCR OSD Mono", 15, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        add(skipSplash);
+
+        if (FlxG.random.bool(65)) 
+            textNeeded = forkLiftText[FlxG.random.int(1, forkLiftText.length)];
+        else
+            textNeeded = psychServerText[FlxG.random.int(1, psychServerText.length)];
+
+        if (FlxG.random.bool(95)){
+       
+        splash = new FlxSprite(0,-100).loadGraphic(Paths.image('thepsych'));
+		splash.screenCenter(X);
+        splash.setGraphicSize(Std.int(splash.width * 0.35));
+        splash.alpha = 0;
+        add(splash);
+
+        randomSplash = new FlxText(-0, 0, 0, textNeeded, 24);
+        randomSplash.setFormat("VCR OSD Mono", 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+        add(randomSplash);
+
+        splashT = new FlxSprite(-200).loadGraphic(Paths.image('psych_text'));
+        splashT.setGraphicSize(Std.int(splashT.width * 0.5));
+		splashT.screenCenter(XY);
+        splashT.y = 450;
+        splashT.alpha = 0;
+        add(splashT);
+        
+        // for auto fix teh text 
+        randomSplash.x = FlxG.width + randomSplash.width;
+        randomSplash.y = FlxG.height - randomSplash.height;
+
+        new FlxTimer().start(1, function(tmr:FlxTimer)
+            {
+                FlxTween.tween(splash, {alpha: 1}, 1, {
+                    ease: FlxEase.circOut,
+                    onComplete: function(twen:FlxTween)
+                    {
+                    }
+                });
+
+                new FlxTimer().start(1.5, function(guh:FlxTimer)
+                    {
+                        FlxTween.tween(splashT, {alpha: 1}, 1, {
+                            ease: FlxEase.circOut,
+                            onComplete: function(tween:FlxTween)
+                            {
+                            }
+                        });
+                        FlxTween.tween(randomSplash, {x: FlxG.width - randomSplash.width}, 1, {
+                            ease: FlxEase.sineInOut,
+                            onComplete: function(tween:FlxTween)
+                            {
+                            }
+                        });
+                        FlxG.sound.play(Paths.sound("psych"));
+                    
+                        new FlxTimer().start(3, function(guh:FlxTimer)
+                            {
+                                FlxTween.tween(randomSplash, {x: FlxG.width + randomSplash.width}, 1, {
+                                    ease: FlxEase.sineInOut,
+                                    onComplete: function(tween:FlxTween)
+                                    {
+                                    }
+                                });
+                                FlxTween.tween(splash, {alpha: 0}, 1, {
+                                    ease: FlxEase.expoOut,
+                                    onComplete: function(twen:FlxTween)
+                                    {
+                                        remove(splash);
+                                        splash.destroy();
+                                    }
+                                });
+                                FlxTween.tween(splashT, {alpha: 0}, 2, {
+                                    ease: FlxEase.expoOut,
+                                    onComplete: function(tween:FlxTween)
+                                    {
+                                        remove(splashT);
+                                        splashT.destroy();
+                                        FlxG.switchState(thestate);
+                                    }
+                                });
+                                
+                            });
+                    });
+            });
+        }
+        else
+        {
+            new FlxTimer().start(1, function(guh:FlxTimer)
+                {
+                    startVideo('unfunny/'+ unfunnyVideos[FlxG.random.int(1, unfunnyVideos.length)]);
+                });
+        }
+
+        super.create();
+    }
+
+    override function update(elapsed) 
+    {
+        if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER)   FlxG.switchState(thestate);
+
+        super.update(elapsed);
+    }
+     
+    function startVideo(name:String)
+        {
+            #if VIDEOS_ALLOWED
+            var filepath:String = Paths.video(name);
+            #if sys
+            if(!FileSystem.exists(filepath))
+            #else
+            if(!OpenFlAssets.exists(filepath))
+            #end
+            {
+                FlxG.log.warn('Couldnt find video file: ' + name);
+                return;
+            }
+    
+            var video:VideoHandler = new VideoHandler();
+            video.playVideo(filepath);
+            video.finishCallback = function()
+            {
+                FlxG.switchState(thestate);
+                return;
+            }
+            #else
+            FlxG.log.warn('Platform not supported!');
+            return;
+            #end
+        }
+}

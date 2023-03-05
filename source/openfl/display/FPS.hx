@@ -66,6 +66,7 @@ class FPS extends TextField
 
 	// Event Handlers
 	@:noCompletion
+	@:noCompletion private var memPeak:Float = 0;
 	private #if !flash override #end function __enterFrame(deltaTime:Float):Void
 	{
 		currentTime += deltaTime;
@@ -87,7 +88,9 @@ class FPS extends TextField
 			
 			#if openfl
 			memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
-			text += "\nMEM: " + memoryMegas + " MB";
+			if (memoryMegas > memPeak) memPeak = memoryMegas;
+			text += "\nMEM: " + memoryMegas + " MB / " + memPeak + " MB";
+			
 			#end
 
 			textColor = 0xFFFFFFFF;

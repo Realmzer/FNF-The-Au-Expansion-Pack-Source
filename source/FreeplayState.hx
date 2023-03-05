@@ -8,6 +8,7 @@ import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
@@ -45,8 +46,10 @@ class FreeplayState extends MusicBeatState
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
-
+	
+	var checkDrop:FlxBackdrop;
 	var bg:FlxSprite;
+	var magenta:FlxSprite;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
@@ -63,7 +66,7 @@ class FreeplayState extends MusicBeatState
 
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("In the Freeplay Menu", null);
 		#end
 
 		for (i in 0...WeekData.weeksList.length) {
@@ -103,10 +106,26 @@ class FreeplayState extends MusicBeatState
 			}
 		}*/
 
+        magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		magenta.updateHitbox();
+		magenta.screenCenter();
+		magenta.antialiasing = ClientPrefs.globalAntialiasing;
+		magenta.color = 0xFFfd719b;
+		add(magenta);
+
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
 		bg.screenCenter();
+
+
+		checkDrop = new FlxBackdrop(Paths.image('checkaboard'), XY, -0, -0);
+		checkDrop.scrollFactor.set();
+		checkDrop.scale.set(0.7,0.7);
+		checkDrop.screenCenter(X);
+		checkDrop.velocity.set(FlxG.random.int(-150, 150),FlxG.random.int(-80, 80));
+		checkDrop.antialiasing = ClientPrefs.globalAntialiasing;
+        add(checkDrop);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);

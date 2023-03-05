@@ -1,5 +1,7 @@
 package;
 
+import Discord;
+import Discord.DiscordClient;
 import lime.app.Promise;
 import lime.app.Future;
 import flixel.FlxG;
@@ -44,6 +46,12 @@ class LoadingState extends MusicBeatState
 	var loadBar:FlxSprite;
 	override function create()
 	{
+
+		#if desktop
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("Loading...", null);
+		#end
+
 		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d);
 		add(bg);
 		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE));
