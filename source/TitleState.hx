@@ -9,6 +9,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.display.FlxGridOverlay;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
@@ -73,6 +74,8 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 	
+	var checkDrop:FlxBackdrop;
+
 	var titleTextColors:Array<FlxColor> = [0xFF33FFFF, 0xFF3333CC];
 	var titleTextAlphas:Array<Float> = [1, .64];
 
@@ -296,6 +299,14 @@ class TitleState extends MusicBeatState
 		// bg.updateHitbox();
 		add(bg);
 
+		checkDrop = new FlxBackdrop(Paths.image('checkaboard'), XY, -0, -0);
+		checkDrop.scrollFactor.set();
+		checkDrop.scale.set(0.7,0.7);
+		checkDrop.screenCenter(X);
+		checkDrop.velocity.set(FlxG.random.int(-150, 150),FlxG.random.int(-80, 80));
+		checkDrop.antialiasing = ClientPrefs.globalAntialiasing;
+		add(checkDrop);
+
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 
@@ -395,8 +406,8 @@ class TitleState extends MusicBeatState
 		logo.antialiasing = ClientPrefs.globalAntialiasing;
 		// add(logo);
 
-		FlxTween.tween(logoBl, {y: logoBl.y + 30}, 1.2, {ease: FlxEase.circInOut, type: PINGPONG});
-		FlxTween.tween(logoBl, {angle: logoBl.angle	+ 5}, 1, {ease: FlxEase.circInOut, type: PINGPONG});
+		FlxTween.tween(logoBl, {y: logoBl.y + 30}, 1.2, {ease: FlxEase.sineInOut, type: PINGPONG});
+		FlxTween.tween(logoBl, {angle: logoBl.angle	+ 5}, 1, {ease: FlxEase.sineInOut, type: PINGPONG});
 
 		credGroup = new FlxGroup();
 		add(credGroup);
@@ -421,6 +432,7 @@ class TitleState extends MusicBeatState
 		ngSpr.antialiasing = ClientPrefs.globalAntialiasing;
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.cubeInOut, type: PINGPONG});
+
 
 		if (initialized)
 			skipIntro();

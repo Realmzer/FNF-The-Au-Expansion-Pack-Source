@@ -7,6 +7,7 @@ import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
+import flixel.addons.display.FlxBackdrop;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
@@ -29,6 +30,7 @@ class CreditsState extends MusicBeatState
 	private var iconArray:Array<AttachedSprite> = [];
 	private var creditsStuff:Array<Array<String>> = [];
 
+	var checkDrop:FlxBackdrop;
 	var bg:FlxSprite;
 	var descText:FlxText;
 	var intendedColor:Int;
@@ -49,6 +51,14 @@ class CreditsState extends MusicBeatState
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		add(bg);
 		bg.screenCenter();
+
+		checkDrop = new FlxBackdrop(Paths.image('checkaboard'), XY, -0, -0);
+		checkDrop.scrollFactor.set();
+		checkDrop.scale.set(0.7,0.7);
+		checkDrop.screenCenter(X);
+		checkDrop.velocity.set(FlxG.random.int(-150, 150),FlxG.random.int(-80, 80));
+		checkDrop.antialiasing = ClientPrefs.globalAntialiasing;
+        add(checkDrop);
 		
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);

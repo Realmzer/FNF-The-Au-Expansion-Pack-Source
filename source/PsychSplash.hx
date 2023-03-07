@@ -35,11 +35,10 @@ class PsychSplash extends FlxState
 
     // i love psych engine community server
     var psychServerText:Array<String> = [
-    "Welcome Back!"];
+        "'Welcome Back'"];
 
     var forkLiftText:Array<String> = [
-    "Welcome Back!"
-                                ];
+        "Welcome Back"];
 
  
 	override function create()

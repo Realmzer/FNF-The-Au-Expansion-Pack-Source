@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
+import flixel.addons.display.FlxBackdrop;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -97,6 +98,14 @@ class MainMenuState extends MusicBeatState
 		magenta.color = 0xFFfd719b;
 		add(magenta);
 		
+		var checkDrop:FlxBackdrop = new FlxBackdrop(Paths.image('checkaboardMagenta'), XY, -0, -0);
+		checkDrop.scrollFactor.set();
+		checkDrop.screenCenter(X);
+		checkDrop.scale.set(0.7,0.7);
+		checkDrop.velocity.set(FlxG.random.int(-150, 150),FlxG.random.int(-80, 80));
+		checkDrop.antialiasing = ClientPrefs.globalAntialiasing;
+        add(checkDrop);
+
 		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
@@ -223,8 +232,8 @@ class MainMenuState extends MusicBeatState
 					{
 						if (curSelected != spr.ID)
 						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
-								ease: FlxEase.quadOut,
+							FlxTween.tween(spr, {y: 250}, 1, {
+								ease: FlxEase.circOut,
 								onComplete: function(twn:FlxTween)
 								{
 									spr.kill();
